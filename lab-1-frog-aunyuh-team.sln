@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab-1-frog-aunyuh-team", "lab-1-frog-aunyuh-team.csproj", "{FC75CB37-A202-FEBE-1866-7DB871DE71D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Tests", "Shop.Tests\Shop.Tests.csproj", "{E2B22D10-A130-4E72-BD85-90E9D0030198}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC75CB37-A202-FEBE-1866-7DB871DE71D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC75CB37-A202-FEBE-1866-7DB871DE71D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC75CB37-A202-FEBE-1866-7DB871DE71D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC75CB37-A202-FEBE-1866-7DB871DE71D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2B22D10-A130-4E72-BD85-90E9D0030198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2B22D10-A130-4E72-BD85-90E9D0030198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2B22D10-A130-4E72-BD85-90E9D0030198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2B22D10-A130-4E72-BD85-90E9D0030198}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85C43C28-FF16-4EDC-B63E-DC42FCDAB3FB}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+EndGlobal

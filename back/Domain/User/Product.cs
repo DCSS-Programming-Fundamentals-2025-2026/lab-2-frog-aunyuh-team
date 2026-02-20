@@ -2,7 +2,7 @@
 
 namespace lab_1_frog_aunyuh_team.back.Domain.User;
 
-public class Product
+public class Product : IComparable
 {
     public string Name { get; set; }
     public Money CurrentPrice { get; set; }
@@ -44,5 +44,15 @@ public class Product
 
 
         return true;
+    }
+
+    public int CompareTo(object? obj)
+    {
+        if (obj is not Product product)
+        {
+            throw new ArgumentException();
+        }
+
+        return string.Compare(Name, product.Name, StringComparison.Ordinal);
     }
 }

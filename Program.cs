@@ -1,9 +1,16 @@
-﻿using lab_1_frog_aunyuh_team.back.Domain.Core;
+using System.Collections;
+using lab_1_frog_aunyuh_team.back.Domain.Core;
 using lab_1_frog_aunyuh_team.back.Domain.User;
 using lab_1_frog_aunyuh_team.back.Domain.GroceryCart;
 
 class Program
 {
+    public static string[] categories = {
+        "Dairy", "Meat & Fish", "Fruits & Vegetables",
+        "Bakery", "Grocery", "Drinks",
+        "Sweets", "Household", "Electronics"
+    };
+    
     static void Main(string[] args)
     {
         Console.Title = "Frog Team Shop";
@@ -22,7 +29,9 @@ class Program
                 "My Cart",
                 "Top Up Balance",
                 "Checkout",
-                "History (All Receipts)"
+                "History (All Receipts)",
+                "All Products (Enumerator Demo)",
+                "Stats"
             };
             UX.DrawMenu(menuItems);
 
@@ -45,6 +54,12 @@ class Program
                 case "5":
                     ShowHistory();
                     break;
+                case "6":
+                    ShowProductEnumeratorDemo();
+                    break;
+                case "7":
+                    ShowStats();
+                    break;
                 case "0":
                     isRunning = false;
                     break;
@@ -61,11 +76,7 @@ class Program
         while (inCategoryMenu)
         {
             UX.DrawHeader("DEPARTMENTS");
-            string[] categories = {
-                "Dairy", "Meat & Fish", "Fruits & Vegetables",
-                "Bakery", "Grocery", "Drinks",
-                "Sweets", "Household", "Electronics"
-            };
+            
             UX.DrawMenu(categories);
 
             if (int.TryParse(Console.ReadLine(), out int choice))
@@ -89,7 +100,7 @@ class Program
         }
     }
 
-    static void ShowProductsInCategory(ProductCategory category)
+    static Product[] ShowProductsInCategory(ProductCategory category)
     {
         bool inProductMenu = true;
         Product[] productsToShow = GetProductsByCategory(category);
@@ -124,7 +135,7 @@ class Program
 
             if (input == "0")
             {
-                return;
+                return productsToShow;
             }
             else if (input == "S")
             {
@@ -150,6 +161,8 @@ class Program
                 }
             }
         }
+
+        return productsToShow;
     }
 
     static Product[] GetProductsByCategory(ProductCategory pc)
@@ -450,5 +463,117 @@ class Program
         UX.DrawHeader("RECEIPT HISTORY");
         Writer.PrintAllReceipts();
         UX.Pause();
-    }                                                       
+    }
+
+    static void ShowProductEnumeratorDemo()
+    {
+        ProductCollection collection = new ProductCollection();
+        foreach (Product p in Session.Catalog.products)
+        {
+            if (p != null)
+            {
+                collection.Add(p);
+            }
+        }
+
+        UX.DrawHeader("ALL PRODUCTS (ENUMERATOR DEMO)");
+        UX.DrawTableHeader();
+
+        int index = 1;
+        IEnumerator<Product> it = collection.GetEnumerator();
+        while (it.MoveNext())
+        {
+            UX.DrawTableRow(index, it.Current);
+            index++;
+        }
+
+        UX.DrawTableFooter();
+        Console.WriteLine($"\nTotal items: {collection.Count}");
+        UX.Pause();
+    }
+
+    static void ShowStats()
+    {
+        int totalValue = 0;
+        int totalProductCount = 0;
+        Hashtable perCategoryValue = new Hashtable();
+        Hashtable perCategoryQuantity = new Hashtable();
+        Hashtable averagePricePerCategory = new Hashtable();
+        Hashtable minPriceItemPerCategory = new Hashtable();
+        Hashtable maxPriceItemPerCategory = new Hashtable();
+        
+        UX.DrawHeader("STATS FOR ALL CATEGORIES");
+        
+
+        for (int i = 0; i <= 8; i++)
+        {
+            int categoryValue = 0;
+            int categoryProductCount = 0;
+            ProductCategory currentProductCategory = (ProductCategory)i;
+            Product[] productsToShow = GetProductsByCategory(currentProductCategory);
+
+            if (productsToShow.Length == 0)
+            {
+                continue;
+            }
+            
+            decimal minPricePerCategory = productsToShow[0].BasePrice.Amount;
+            decimal maxPricePerCategory = productsToShow[0].BasePrice.Amount;
+            foreach (Product product in productsToShow)
+            {
+                categoryValue += (int)(product.BasePrice.Amount * (decimal)product.StockQuantity.Value);
+                totalValue += (int)(product.BasePrice.Amount * (decimal)product.StockQuantity.Value);
+                categoryProductCount+=(int)product.StockQuantity.Value;
+                totalProductCount+=(int)product.StockQuantity.Value;
+
+                if (product.BasePrice.Amount < minPricePerCategory)
+                {
+                    minPricePerCategory = product.BasePrice.Amount;
+                }
+                if (product.BasePrice.Amount > maxPricePerCategory)
+                {
+                    maxPricePerCategory = product.BasePrice.Amount;
+                }
+            }
+            
+            perCategoryValue.Add(currentProductCategory, categoryValue);
+            perCategoryQuantity.Add(currentProductCategory, categoryProductCount);
+            averagePricePerCategory.Add(currentProductCategory, (decimal)categoryValue / categoryProductCount);
+            minPriceItemPerCategory.Add(currentProductCategory, minPricePerCategory);
+            maxPriceItemPerCategory.Add(currentProductCategory, maxPricePerCategory);
+            
+        }
+
+
+        Console.WriteLine($"Total value: {totalValue}");
+        Console.WriteLine($"Total products: {totalProductCount}");
+        Console.WriteLine();
+        
+        for (int i = 0; i <= 8; i++)
+        {
+            ProductCategory currentProductCategory= (ProductCategory)i;
+
+            object? quantity = perCategoryQuantity[currentProductCategory];
+            if (quantity is null)
+            {
+                continue;
+            }
+            
+            if (quantity is int intQuantity)
+            {
+                if (intQuantity == 0)
+                {
+                    continue;
+                }
+            }
+            
+            Console.WriteLine($"[ {currentProductCategory} ]");
+            Console.WriteLine($"├─ Value:        {perCategoryValue[currentProductCategory]}");
+            Console.WriteLine($"├─ Count:        {perCategoryQuantity[currentProductCategory]}");
+            Console.WriteLine($"└─ Pricing:      AVG: {((decimal)averagePricePerCategory[currentProductCategory]!):F2}  |  Min: {minPriceItemPerCategory[currentProductCategory]}  |  Max: {maxPriceItemPerCategory[currentProductCategory]}");
+            Console.WriteLine();
+        }
+
+        UX.Pause();
+    }
 }
